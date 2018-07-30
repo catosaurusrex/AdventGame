@@ -11,22 +11,29 @@ namespace AdventGame
         static void Main(string[] args)
         {
             // PlayerStats
-            int playerCurrentHP = 20;
+            int playerCurrentHP = 100;
             int playerFullHP = 100;
-            double playerCurrentEXP = 10;
+            double playerCurrentEXP = 0;
             double playerFullEXP = 100;
             int playerCurrentLevel = 1;
+
+            int attackBonus = 0;
+            int speechBonus = 0;
+            int sneakBonus = 0;
+            int armourBonus = 0;
+            int castingBonus = 0;
+
 
             // X and Y axis
             int CharMoveLeftRight = 10;
             int CharMoveUpDown = 10;
 
             int gameOver = 0;
-            string playerName;
+            string playerName = "";
             string currentCommand;
             int restingTime;
             string playerStatus = "Neutral";
-            string playerClass;
+            string playerClass = "";
             int errorCode = 0;
             //Array
             string[,] inventory = new string[10,20];
@@ -41,15 +48,18 @@ namespace AdventGame
                     playerFullEXP = playerFullEXP * 1.20;
                 }
 
-                //Character creation:
-
+                //Character creation: here the player can choose a name
+                if (playerName == "" && playerClass == "")
+                {
                 Console.Clear();
                 Console.SetCursorPosition(Console.WindowWidth / 2 - 20, Console.WindowHeight / 2 - 3);
                 Console.Write("Please enter your character name : ");
                 playerName = Console.ReadLine();
                 Console.Clear();
+                
                 do
                 {
+                        // here he can choose a class 
                     Console.SetCursorPosition(Console.WindowWidth / 2 - 20, Console.WindowHeight / 2 - 1);
                     Console.Write("Please choose a class : ");
                     Console.SetCursorPosition(Console.WindowWidth / 2 - 20, Console.WindowHeight / 2);
@@ -62,12 +72,37 @@ namespace AdventGame
                     string selectedClass = Console.ReadLine().ToUpper();
                     Console.Clear();
 
-                    
+                    // if selected class is not OK he will have to try again
                     if (selectedClass == "OUTLAW" || selectedClass == "PALADIN" || selectedClass == "MAGE" || selectedClass == "WARRIOR" || selectedClass == "ROGUE" || selectedClass == "PRIEST")
                     {
                         errorCode = 1;
                         playerClass = selectedClass;
-                    }
+                            switch (selectedClass)
+                            {
+                                case "OUTLAW": 
+                                    {
+                                        attackBonus += 3 ;
+                                        speechBonus += 7;
+                                        sneakBonus += 10;
+                                        armourBonus += 2;
+                                        castingBonus += 1;
+
+                                    }
+                                    break;
+                                case "PALADIN":
+                                    {
+                                        attackBonus += 8;
+                                        speechBonus += 3;
+                                        sneakBonus += 2;
+                                        armourBonus += 7;
+                                        castingBonus += 2;
+
+                                    }
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
                     else
                     {
                         errorCode = 0;
@@ -77,7 +112,7 @@ namespace AdventGame
                 } while (errorCode==0);
 
 
-
+                }
 
 
 
@@ -231,25 +266,19 @@ namespace AdventGame
                     for (int a = 0; a <= 19; a++)
                     {
                         for (int b = 0; b <= 9; b++)
-                        {
-                            
+                        {   
                             if (b<=10)
                             {
                                 Console.SetCursorPosition(b*7+3, 5+a);
                                 Console.Write("{0}", inventory[b, a]);
                             }
-                            else  { }
-
-
                         }
                     }
                     Console.SetCursorPosition(0, 29);
                     Console.ForegroundColor = ConsoleColor.Black;
                     Console.Write(currentCommand);
                     Console.ForegroundColor = ConsoleColor.White;
-                
-
-                      //  Console.SetCursorPosition(2, 26);
+                         //  Console.SetCursorPosition(2, 26);
                         Console.Write("< Back? ");
                         Console.SetCursorPosition(1, 30);
                         currentCommand = Console.ReadLine().ToUpper();
@@ -257,11 +286,6 @@ namespace AdventGame
                         {
                             Console.Clear();
                         }
-                        else
-                        {
-
-                        }
-
                 }
                 if (currentCommand == "SLEEP" || currentCommand == "NAP" || currentCommand == "REST")
                 {
@@ -286,6 +310,8 @@ namespace AdventGame
                     }
                     
                     playerCurrentHP = playerCurrentHP + (restingTime) * 15;
+
+
                     if (playerCurrentHP > playerFullHP)
                     {
                         playerCurrentHP = playerFullHP;
@@ -294,9 +320,20 @@ namespace AdventGame
                 }
                 if (currentCommand == "STATUS")
                 {
-                    Console.Clear();
+                    //Console.Clear();
                     Console.SetCursorPosition(Console.WindowWidth / 2 - 5, Console.WindowHeight / 2 - 3);
-                    Console.Write("Your status is : " + playerStatus);
+                    Console.Write("Your status is : " + playerStatus );
+                    Console.SetCursorPosition(0, 29);
+                    Console.ForegroundColor = ConsoleColor.Black;
+                    Console.Write(currentCommand);
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.Write("< Back? ");
+                    Console.SetCursorPosition(1, 30);
+                    currentCommand = Console.ReadLine().ToUpper();
+                    if (currentCommand == "BACK" || currentCommand == "<" || currentCommand == "yes")
+                    {
+                        Console.Clear();
+                    }
                 }
 
             } while (gameOver == 0);
