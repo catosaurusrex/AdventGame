@@ -22,10 +22,12 @@ namespace AdventGame
             int CharMoveUpDown = 10;
 
             int gameOver = 0;
-            string playerName = "Heinrich";
+            string playerName;
             string currentCommand;
             int restingTime;
-
+            string playerStatus = "Neutral";
+            string playerClass;
+            int errorCode = 0;
             //Array
             string[,] inventory = new string[10,20];
 
@@ -39,7 +41,48 @@ namespace AdventGame
                     playerFullEXP = playerFullEXP * 1.20;
                 }
 
+                //Character creation:
+
+                Console.Clear();
+                Console.SetCursorPosition(Console.WindowWidth / 2 - 20, Console.WindowHeight / 2 - 3);
+                Console.Write("Please enter your character name : ");
+                playerName = Console.ReadLine();
+                Console.Clear();
+                do
+                {
+                    Console.SetCursorPosition(Console.WindowWidth / 2 - 20, Console.WindowHeight / 2 - 1);
+                    Console.Write("Please choose a class : ");
+                    Console.SetCursorPosition(Console.WindowWidth / 2 - 20, Console.WindowHeight / 2);
+                    Console.Write(" Outlaw      Paladin");
+                    Console.SetCursorPosition(Console.WindowWidth / 2 - 20, Console.WindowHeight / 2 + 1);
+                    Console.Write(" Mage        Warrior");
+                    Console.SetCursorPosition(Console.WindowWidth / 2 - 20, Console.WindowHeight / 2 + 2);
+                    Console.Write(" Priest      Rogue");
+                    Console.SetCursorPosition(Console.WindowWidth / 2 - 20, Console.WindowHeight / 2 + 3);
+                    string selectedClass = Console.ReadLine().ToUpper();
+                    Console.Clear();
+
+                    
+                    if (selectedClass == "OUTLAW" || selectedClass == "PALADIN" || selectedClass == "MAGE" || selectedClass == "WARRIOR" || selectedClass == "ROGUE" || selectedClass == "PRIEST")
+                    {
+                        errorCode = 1;
+                        playerClass = selectedClass;
+                    }
+                    else
+                    {
+                        errorCode = 0;
+                        
+                    }
+
+                } while (errorCode==0);
+
+
+
+
+
+
                 // Draw stats and top box
+                Console.Clear();
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.SetCursorPosition(0, 0);
                 Console.WriteLine("  _____________________________________________________________________________________________________________________");
@@ -229,22 +272,31 @@ namespace AdventGame
                     Console.Clear();
                    
                     Console.SetCursorPosition(Console.WindowWidth / 2 - 5, Console.WindowHeight / 2 - 3);
-                   // Console.Write("Resting: ");
-                    restingTime = restingTime * 1000;
+                    if (restingTime >=10)
+                    {
+                        restingTime = 9;
+                    }
+    
                     for (int a = restingTime; a >= 0; a--)
                     {
                         Console.SetCursorPosition(Console.WindowWidth / 2 - 5, Console.WindowHeight / 2 - 3);
-                        Console.Write("{0}", a/1000);
-                        System.Threading.Thread.Sleep(1);
-    
+                        Console.Write(" Waking up in : {0}", a );  
+                        System.Threading.Thread.Sleep(1000);
+      
                     }
                     
-                    playerCurrentHP = playerCurrentHP + (restingTime / 1000);
+                    playerCurrentHP = playerCurrentHP + (restingTime) * 15;
                     if (playerCurrentHP > playerFullHP)
                     {
                         playerCurrentHP = playerFullHP;
                     }
                     Console.Clear();
+                }
+                if (currentCommand == "STATUS")
+                {
+                    Console.Clear();
+                    Console.SetCursorPosition(Console.WindowWidth / 2 - 5, Console.WindowHeight / 2 - 3);
+                    Console.Write("Your status is : " + playerStatus);
                 }
 
             } while (gameOver == 0);
